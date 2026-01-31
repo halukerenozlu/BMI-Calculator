@@ -1,14 +1,38 @@
 import customtkinter
+import database
 
 
 app = customtkinter.CTk()
 app.title("BMI Calculator")
-app.geometry("300x450")
+app.geometry("300x600")
 
 my_label = customtkinter.CTkLabel(master=app, text="BMI Calculator",)
 my_label.configure(text_color="yellow",font=("Arial", 24, "bold"))
 my_label.pack(padx=5, pady=15)
 
+
+# --- LİSTEYİ GÜNCELLEME FONKSİYONU ---
+def update_history_ui():
+    # Önce listedeki eski elemanları temizle (üst üste binmesin)
+    for widget in history_frame.winfo_children():
+        widget.destroy()
+
+    # Veritabanından verileri çek
+    data = database.fetch_history()
+
+    # Her bir veri için bir Label oluşturup listeye ekle
+    for row in data:
+        # row verisi şöyledir: (id, bmi, status, date)
+        bmi_val = "{:.2f}".format(row[1])
+        status_val = row[2]
+        date_val = row[3].split(" ")[0]  # Sadece tarihi al (saati at)
+
+        # Ekranda görünecek yazı
+        record_text = f"{date_val} | BMI: {bmi_val} | {status_val}"
+
+        # Listeye etiket olarak ekle
+        record_label = customtkinter.CTkLabel(history_frame, text=record_text, font=("Arial", 12))
+        record_label.pack(anchor="w", padx=5, pady=2)
 
 def my_button_clicked():
     try:
@@ -51,6 +75,10 @@ def my_button_clicked():
             my_result_entry.configure(text_color=status_color)
             status_label.configure(text=status_text, text_color=status_color)
 
+            database.add_entry(bmi, status_text)
+
+            update_history_ui()
+
         my_result_entry.delete(0, "end")
         my_result_entry.insert(0, result_text)
 
@@ -79,4 +107,14 @@ my_result_entry.pack(padx=5, pady=5)
 status_label = customtkinter.CTkLabel(app, text="", font=("Arial", 16, "bold"))
 status_label.pack(pady=10)
 
+# --- HISTORY ---
+history_title = customtkinter.CTkLabel(app, text="Son 5 Kayıt", font=("Arial", 14, "bold"))
+history_title.pack(pady=(10, 0))
+
+# Scrollable Frame
+history_frame = customtkinter.CTkScrollableFrame(app, width=200, height=100)
+history_frame.pack(pady=5)
+
+
+database.init_db()
 app.mainloop()

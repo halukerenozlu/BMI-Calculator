@@ -1,17 +1,26 @@
-# 🏋️ BMI Calculator (Body Mass Index Calculator)
+# 🏋️ BMI Calculator with History
 
-A BMI calculation application developed using Python and the **CustomTkinter** library, featuring a modern interface.
+Developed using Python, **CustomTkinter**, and **SQLite**; it is an advanced BMI application with a modern interface that stores historical records in a database.
 
 ## 🌟 Features
 
-* **Flexible Input:** You can enter height in either meters (1.80) or centimeters (180); the application automatically detects it.
-* **Visual Feedback:** Color-coded warnings (Yellow, Green, Red) based on the result (Underweight, Normal, Obese).
-* **Error Checking:** Prevents invalid characters or illogical number entries.
-* **Modern Interface:** Stylish design compatible with dark mode.
+* **💾 Database Integration:** All calculations are automatically saved to a local `SQLite` database.
+* **📜 History List:** The last 5 calculations (Date | BMI | Status) are displayed in a scrollable list within the application.
+* **🧠 Smart Input:** Enter height in either cm (180) or meters (1.80); the app automatically detects and corrects it.
+* **🎨 Color Feedback:** Dynamic color change based on the result (Green: Normal, Yellow: Underweight/Overweight, Red: Obese).
+* **⚠️ Error Checking:** Prevents illogical height/weight entries.
+
+## 📂 File Structure
+
+The project is organized according to the **“Separation of Concerns”** principle:
+
+* **`main.py`**: Application interface (Frontend) and user interactions.
+* **`database.py`**: Database connection, record insertion, and data retrieval operations (Backend).
+* **`bmi_history.db`**: Database file automatically created when the application is run for the first time.
 
 ## 🚀 Installation and Execution
 
-1.  Install the required library:
+1.  Install the required library (SQLite comes embedded with Python, no installation required):
     ```bash
     pip install customtkinter
     ```
@@ -23,9 +32,7 @@ A BMI calculation application developed using Python and the **CustomTkinter** l
 
 ## 📷 Usage
 
-1.  Enter your weight (kg).
-2.  Enter your height (cm or m).
-3.  Press the **Calculate** button.
-4.  View the result and your health status in color.
-
-Translated with DeepL.com (free version)
+1.  Enter your height and weight.
+2.  Press the **Calculate** button.
+3.  Your result is calculated instantly and added to the **“Last 5 Records”** list below.
+4.  Your data won't be lost even if you close and reopen the application!
