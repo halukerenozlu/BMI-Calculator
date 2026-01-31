@@ -1,0 +1,82 @@
+import customtkinter
+
+
+app = customtkinter.CTk()
+app.title("BMI Calculator")
+app.geometry("300x450")
+
+my_label = customtkinter.CTkLabel(master=app, text="BMI Calculator",)
+my_label.configure(text_color="yellow",font=("Arial", 24, "bold"))
+my_label.pack(padx=5, pady=15)
+
+
+def my_button_clicked():
+    try:
+        height_input = my_entry_height.get()
+        weight_input = my_entry_weight.get()
+
+        user_height = float(height_input)
+        user_weight = float(weight_input)
+
+        if user_height > 3:
+            user_height = user_height / 100
+
+        if user_height <= 0 or user_height > 2.50:
+            result_text = "Height Error!"
+            my_result_entry.configure(text_color="red")
+            status_label.configure(text="")  # Hata varsa durumu temizle
+
+        elif user_weight <= 0 or user_weight > 600:
+            result_text = "Weight Error!"
+            my_result_entry.configure(text_color="red")
+            status_label.configure(text="")
+
+        else:
+            bmi = user_weight / (user_height * user_height)
+            result_text = "{:.2f}".format(bmi)
+
+            if bmi < 18.5:
+                status_text = "Thin"
+                status_color = "#FFCC00"  # Yellow/Orange
+            elif 18.5 <= bmi <= 24.9:
+                status_text = "Normal"
+                status_color = "#32CD32"  # Lime Green
+            elif 25 <= bmi <= 29.9:
+                status_text = "Overweight"
+                status_color = "#FFCC00"  # Yellow/Orange
+            else:
+                status_text = "Obese"
+                status_color = "#FF4500"  # Orange Red
+
+            my_result_entry.configure(text_color=status_color)
+            status_label.configure(text=status_text, text_color=status_color)
+
+        my_result_entry.delete(0, "end")
+        my_result_entry.insert(0, result_text)
+
+    except ValueError:
+        my_result_entry.configure(text_color="red")
+        my_result_entry.delete(0, "end")
+        my_result_entry.insert(0, "Sayı Giriniz!")
+        status_label.configure(text="")
+
+
+my_entry_weight = customtkinter.CTkEntry(app, placeholder_text="your weight")
+my_entry_weight.pack(padx=5, pady=5)
+
+my_entry_height = customtkinter.CTkEntry(app, placeholder_text="your height")
+my_entry_height.pack(padx=5, pady=5)
+
+my_button = customtkinter.CTkButton(master=app,text="Calculate", command=my_button_clicked)
+my_button.pack(padx=5, pady=10)
+
+result_label = customtkinter.CTkLabel(app, text="Result:", font=("Arial", 16))
+result_label.pack(pady=(10, 0))
+
+my_result_entry = customtkinter.CTkEntry(app, font=("Arial", 18, "bold"),text_color="green", fg_color="#333333", justify="center")
+my_result_entry.pack(padx=5, pady=5)
+
+status_label = customtkinter.CTkLabel(app, text="", font=("Arial", 16, "bold"))
+status_label.pack(pady=10)
+
+app.mainloop()
